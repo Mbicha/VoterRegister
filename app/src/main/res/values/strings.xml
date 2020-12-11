@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Voter Register</string>
+
+    <string name="add_voter">Add Voter Here!</string>
+    <string name="edit_voter">Edit Voter Here!</string>
+    <string name="voter_name">Enter Voter Name</string>
+    <string name="voter_id">Enter Voter Id</string>
+    <string name="voter_station">Enter Voter Station</string>
+    <string name="floating_save">Save Voter Button</string>
+    <string name="voter_details_display">Voter Details</string>
+    <string name="name_disp">Name</string>
+    <string name="station_disp">Station</string>
+    <string name="id_num_disp">Id Number</string>
+    <string name="voter_title">All Voters</string>
+    <string name="delete_all">Delete All</string>
+</resources>
