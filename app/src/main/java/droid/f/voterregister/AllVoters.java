@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import droid.f.voterregister.adapters.VoterAdapter;
 import droid.f.voterregister.databaseutil.Voter;
+import droid.f.voterregister.settings.SettingsActivity;
 
 import static droid.f.voterregister.Constants.*;
 
@@ -33,17 +36,17 @@ public class AllVoters extends AppCompatActivity {
     private VoterAdapter mVoterAdapter;
     private RecyclerView mRecyclerView;
     private VoterViewModel mVoterViewModel;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setTitle(R.string.voter_title);
         mVoterViewModel = new ViewModelProvider(this).get(VoterViewModel.class);
         setUpRecyclerView();
         displayVoters();
-
+        settingScreenDefaults();
     }
 
     private void displayVoters() {
@@ -58,6 +61,7 @@ public class AllVoters extends AppCompatActivity {
 
         editVoterData();
         deleteVoter();
+        readDefaultValues();
     }
 
     //deletes one voter
@@ -86,10 +90,18 @@ public class AllVoters extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_delete_all:
                 deleteAllVoters();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                break;
+            case R.id.action_settings:
+                settingScreen();
+                break;
+
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void settingScreen() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     private void deleteAllVoters() {
@@ -148,5 +160,22 @@ public class AllVoters extends AppCompatActivity {
         else {
             Toast.makeText(this, "Voter Not Registered!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //setting screen default values
+    private void settingScreenDefaults() {
+        PreferenceManager.setDefaultValues(this, R.xml.account_preferences, false);
+        PreferenceManager.setDefaultValues(this, R.xml.messages_preferences, false);
+    }
+
+    //read default values for setting screen
+    private void readDefaultValues(){
+        mSharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        String userName = mSharedPreferences.getString("username", "user");
+        String email = mSharedPreferences.getString("email", "voter@gmail.com");
+        String country = mSharedPreferences.getString("country", "Kenya");
+        String station = mSharedPreferences.getString("station", "Matooni");
+        String phoneNumber = mSharedPreferences.getString("phoneNumber", "+2547******08");
     }
 }

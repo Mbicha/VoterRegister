@@ -1,10 +1,14 @@
 package droid.f.voterregister;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.ShareCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,12 +17,18 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.concurrent.TimeUnit;
+
 import droid.f.voterregister.databaseutil.Voter;
+import droid.f.voterregister.worknotificationmanager.VoterNotification;
 
 import static droid.f.voterregister.Constants.*;
 
@@ -78,36 +88,56 @@ public class NewVoter extends AppCompatActivity {
                 feedbackIntent.putExtra(EXTRA_VOTER_ID, id);
             }
 
+            notifyOnVoterRegistration();
             setResult(RESULT_OK, feedbackIntent);
-            //notifyOnVoterRegistration();
             finish();
         }
     }
 
-    private void notifyOnVoterRegistration() {
-        NotificationCompat.Builder voterNotifybuilder = getVoterNotificationBuilder();
-        mNotify.notify(NOTIFICACTION_ID, voterNotifybuilder.build());
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.new_voter_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
-    public void createVoterNotificationChannel(){
-        mNotify = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel voterNotificationChannel =
-                    new NotificationChannel(PRIMARY_CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-            voterNotificationChannel.enableVibration(true);
-            voterNotificationChannel.setLightColor(Color.GREEN);
-            voterNotificationChannel.enableLights(true);
-            voterNotificationChannel.setDescription("Notification From Voter Registerer");
-            mNotify.createNotificationChannel(voterNotificationChannel);
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.action_share:
+                sendVoterInfo();
+                break;
+            case R.id.action_notify:
+                break;
+
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    private NotificationCompat.Builder getVoterNotificationBuilder(){
-        NotificationCompat.Builder notifyVoterBuilder =
-                new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
-                        .setContentTitle("New Voter registerd")
-                        .setContentText("Check to confirm new Voter in our register")
-                        .setSmallIcon(R.drawable.registervotersmallpicture);
-        return notifyVoterBuilder;
+    //invoke notification
+    private void notifyOnVoterRegistration() {
+        OneTimeWorkRequest oneTimeWorkRequest = new
+                OneTimeWorkRequest.Builder(VoterNotification.class).setInitialDelay(5, TimeUnit.SECONDS).build();
+        WorkManager.getInstance(this)
+                .enqueue(oneTimeWorkRequest);
     }
+
+    //sends voter data to the intended recipient via any of the installed apps
+    private void sendVoterInfo() {
+        String vName = mVoterName.getText().toString();
+        String vStation = mVoterStation.getText().toString();
+
+        String mimeType = "plain/text";
+        String subject = "Confirmation of Registration";
+        String body = "Hello " + vName +",This is to inform you that you are now a registered voter /n." +
+                "Congratulations and enjoy your voting rights at " + vStation;
+
+        ShareCompat.IntentBuilder
+                .from(this)
+                .setType(mimeType)
+                .setChooserTitle("Share Voter Data:")
+                .setSubject(subject)
+                .setText(body)
+                .startChooser();
+    }
+
 }

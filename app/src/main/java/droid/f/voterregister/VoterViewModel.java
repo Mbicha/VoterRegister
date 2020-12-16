@@ -20,7 +20,6 @@ public class VoterViewModel extends AndroidViewModel {
         mRepository = new VoterRepository(application);
         mAllVoters = mRepository.getAllVoters();
     }
-
     public LiveData<List<Voter>> getAllVoters() {
         return mAllVoters;
     }

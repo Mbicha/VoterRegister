@@ -26,14 +26,14 @@
         style="@style/EditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="@string/voter_name"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/screen_lable"
         app:layout_constraintStart_toStartOf="@+id/screen_lable"
-        app:layout_constraintTop_toBottomOf="@+id/screen_lable"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/screen_lable" />
 
     <EditText
         android:id="@+id/text_voter_station"

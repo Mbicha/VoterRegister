@@ -12,8 +12,4 @@ public class Constants {
             "droid.f.voterregister.EXTRA_VOTER_STAION";
     public static final String EXTRA_VOTER_IDNUM =
             "droid.f.voterregister.EXTRA_VOTER_IDNUM";
-    public static final String PRIMARY_CHANNEL_ID =
-            "droid.f.voterregister.PRIMARY_CHANNEL_ID";
-    public static final String  CHANNEL_NAME = "Voter Registration";
-    public static final int NOTIFICACTION_ID = 0;
 }

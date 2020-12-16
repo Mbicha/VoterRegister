@@ -1,0 +1,44 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="@string/account_header">
+
+        <EditTextPreference
+            android:defaultValue="@string/default_user_name"
+            android:key="username"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/user_name"
+            app:isPreferenceVisible="false"
+            android:summary="@string/enter_name"/>
+
+        <EditTextPreference
+            android:defaultValue="@string/default_email_address"
+            android:key="email"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/email_title"
+            android:summary="@string/enter_email"/>
+        <ListPreference
+            android:defaultValue="KE"
+            android:entries="@array/country_names"
+            android:entryValues="@array/country_values"
+            android:key="country"
+            android:title="@string/country"
+            android:summary="@string/country_summary"/>
+        <EditTextPreference
+            android:defaultValue="@string/default_station"
+            android:key="station"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/station"
+            android:summary="@string/enter_station"/>
+        <EditTextPreference
+            android:defaultValue="@string/default_phone_number"
+            android:key="phoneNumber"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/phone_number"
+            android:summary="@string/enter_phone_number"/>
+    </PreferenceCategory>
+</PreferenceScreen>
