@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,9 +55,11 @@ public class AllVoters extends AppCompatActivity {
     }
 
     private void setUpRecyclerView() {
+        int gridColumnCount = getResources().getInteger(R.integer.grid_column_count);
+
         mRecyclerView = findViewById(R.id.rec_voter_view);
         mVoterAdapter = new VoterAdapter();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, gridColumnCount));
         mRecyclerView.setAdapter(mVoterAdapter);
 
         editVoterData();
